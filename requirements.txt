@@ -2,9 +2,14 @@ streamlit
 pandas
 numpy
 matplotlib
-datetime
 pytz
 openpyxl
 xlrd>=1.0.0
 seaborn
 odfpy
+boto3
+docx2txt
+pytesseract
+Pillow
+PyMuPDF
+plotly
