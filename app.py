@@ -69,22 +69,22 @@ def upload_to_s3(file_obj, file_name):
         's3',
         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
         aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-        region_name='eu-north-1'  # use your AWS region
+        region_name=os.getenv("AWS_REGION", "ap-south-1")
     )
-    BUCKET_NAME = "cloudanalytics-data-files"  # Replace with your real bucket name
+    bucket_name = os.environ["S3_BUCKET_NAME"]
     file_obj.seek(0)
-    s3.upload_fileobj(file_obj, BUCKET_NAME, file_name)
-    return f"https://{BUCKET_NAME}.s3.amazonaws.com/{file_name}"
+    s3.upload_fileobj(file_obj, bucket_name, file_name)
+    return f"https://{bucket_name}.s3.amazonaws.com/{file_name}"
 
 def send_sns_notification(file_name, s3_url):
     sns = boto3.client(
         'sns',
         aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
         aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-        region_name='us-east-1'
+        region_name=os.getenv("AWS_REGION", "ap-south-1")
     )
 
-    topic_arn = "arn:aws:sns:us-east-1:463470942394:cloudanalytics-file-upload-alert"  # change this!
+    topic_arn = os.environ["SNS_TOPIC_ARN"]
 
     message = f"📁 New File Uploaded: {file_name}\n🔗 S3 URL: {s3_url}"
 
